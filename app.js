@@ -22,3 +22,31 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+// read the environment variables
+require('dotenv').config({
+    path: './.env',
+  });
+
+  const express = require('express');
+  const winston = require('./config/winston');
+  const constants = require('./config/constants');
+
+  // create an express app
+  const app = express();
+
+  // bootstrap the application configuration
+  require('./config/config')((err) => {
+    if (err) {
+      winston.error('Could not bootstrap the application configuration. Exiting.');
+      process.exit(1);
+    } else {
+      // apply the express configuration
+      require('./config/express')(app);
+
+      // start the server
+      require('./config/server')(app);
+    }
+  });
+
+  module.exports = app;

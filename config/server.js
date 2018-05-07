@@ -22,3 +22,46 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+const http = require('http');
+const winston = require('./winston');
+
+/**
+ *
+ * @param {*} express_app - The Express app object
+ * @param {*} port - The port for API server
+ */
+module.exports = function(express_app) {
+
+  // read the api port from env variables
+  const port = process.env.API_PORT || 3000;
+
+  // create an http server
+  const server = http.createServer(express_app);
+  server.listen(port);
+
+  // handle error
+  server.on('error', function(error) {
+    switch (error.code) {
+      case 'EACCES':
+        winston.error(`Port '${port}' is not accessible. Exiting.`);
+        process.exit(1);
+        break;
+      case 'EADDRINUSE':
+        winston.error(`Port '${port}' is already in use. Exiting.`);
+        process.exit(1);
+        break;
+      default:
+        throw error;
+    }
+  });
+
+  // handle succesful server init
+  server.on('listening', function() {
+    express_app.emit('appStarted');
+    winston.info('Server started on port: ', port);
+  });
+
+  return server;
+}
+

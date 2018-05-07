@@ -22,3 +22,28 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+const winston = require('./winston');
+
+/**
+ *
+ * @param {*} app - The Express app object
+ */
+module.exports = function (app) {
+
+  winston.debug('Binding routes');
+
+  // ping server
+  app.use('/v1/ping', require('../api/ping/ping'));
+
+  // default
+  app.route('/*').get(function(req, res){
+    winston.verbose('Illegal API endpoint hit: ', req.url);
+
+    // respond with 404
+    res.status(404);
+    res.json({
+      message: 'API endpoint not found.'
+    });
+  });
+};

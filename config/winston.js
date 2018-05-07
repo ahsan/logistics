@@ -22,3 +22,29 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+const winston = require('winston');
+const path = require('path');
+const fs = require('fs');
+const moment = require('moment');
+
+// logs directory
+const log_directory = 'logs';
+
+// make the directory structure for logs
+if (!fs.existsSync(log_directory)) {
+  fs.mkdirSync(log_directory);
+}
+const logs = path.join(log_directory, 'logistics.log');
+
+const logger = new winston.Logger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({filename: logs}),
+  ],
+  level: 'debug',
+});
+
+console.log('Winston logger created.');
+
+module.exports = logger;

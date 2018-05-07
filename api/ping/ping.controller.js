@@ -22,3 +22,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+/**
+ * Returns 'pong' message with the current time to a ping request.
+ * @param req: the request object
+ * @param res: the response object
+ * @return A JSON object containing response code, message and
+ * current server time.
+ */
+exports.pong = function (req, res) {
+  res.status(200).json({
+      time: new Date().toISOString(),
+      message: 'pong'
+  });
+};

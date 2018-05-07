@@ -1,0 +1,28 @@
+{
+  "name": "logistics",
+  "version": "1.0.0",
+  "description": "A sample NodeJS application to implement basic logistics operations.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahsan/logistics.git"
+  },
+  "author": "Muhammad Abdullah Ahsan Khan",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/ahsan/logistics/issues"
+  },
+  "homepage": "https://github.com/ahsan/logistics#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "moment": "^2.22.1",
+    "mongoose": "^5.0.17",
+    "morgan": "^1.9.0",
+    "rotating-file-stream": "^1.3.6",
+    "winston": "^2.4.2"
+  }
+}

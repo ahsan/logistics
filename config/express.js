@@ -22,3 +22,30 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
+
+const bodyParser = require('body-parser');
+
+/**
+ *
+ * @param {*} app - The Express app object
+ */
+module.exports = function(app) {
+
+  // bind routes to the express app
+  require('./routes')(app);
+
+  // parse request body
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+
+  // log all the API requests using morgan
+  require('./morgan')(app);
+
+  // CORS middleware
+  app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
+    next();
+  });
+
+};
