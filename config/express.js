@@ -38,9 +38,6 @@ module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  // log all the API requests using morgan
-  require('./morgan')(app);
-
   // CORS middleware
   app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

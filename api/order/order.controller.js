@@ -22,17 +22,3 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
-
-const morgan = require('morgan');
-const fs = require('fs');
-const rfs = require('rotating-file-stream');
-let log_directory = 'logs';
-
-module.exports = function(app) {
-
-    const access_logs_stream = fs.createWriteStream('./logs/access2.log', {flags: 'a'});
-
-    app.use(morgan('common', {stream: access_logs_stream}));
-
-    console.log('morgans added')
-}
