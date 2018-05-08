@@ -33,8 +33,8 @@ module.exports = function (app) {
 
   winston.debug('Binding routes');
 
-  // ping server
-  app.use('/v1/ping', require('../api/ping/ping'));
+  // api v1 routes
+  require('../api/v1/v1.routes')(app);
 
   // default
   app.route('/*').get(function(req, res){
