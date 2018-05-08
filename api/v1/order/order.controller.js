@@ -33,7 +33,6 @@ const winston = require('../../../config/winston');
  * @return response code, message and created order.
  */
 exports.create_order = function (req, res) {
-
     Order.create(
         req.body.order,
         function (err, user) {
@@ -59,7 +58,7 @@ exports.create_order = function (req, res) {
 
 /**
  * Gets an order.
- * @param req: the request object, contains a query param .
+ * @param req: the request object
  * @param res: the response object
  * @return response code, message and queried order.
  */
@@ -74,7 +73,7 @@ exports.get_order = function (req, res) {
                     message: err.message,
                     order: null
                 });
-            } else if (!found_orders) {
+            } else if (found_orders.length == 0) {
                 return res.status(400).json({
                     message: `Could not find an order with the given query parameters`,
                     order: null
@@ -87,3 +86,39 @@ exports.get_order = function (req, res) {
             }
     });
 };
+
+/**
+ * Deletes an order.
+ * @param req: the request object
+ * @param res: the response object
+ * @return response code, message and queried order.
+ */
+exports.delete_order = function (req, res) {
+    Order.findOneAndRemove(
+        req.mongoose_query,
+        function(err, deleted_order) {
+            if(err) {
+                winston.error(`Encountered an error while deleting an order: ${JSON.stringify(err)}`);
+                return res.status(500).json({
+                    message: err.message,
+                    order: null
+                });
+            } else if (!deleted_order) {
+                return res.status(400).json({
+                    message: `Could not find an order with the given query parameters`,
+                    order: null
+                });
+            } else {
+                return res.status(200).json({
+                    message: `Deleted order successfully.`,
+                    order: deleted_order
+                });
+            }
+    });
+};
+
+
+
+
+
+

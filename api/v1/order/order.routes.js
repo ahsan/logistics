@@ -33,6 +33,11 @@ var router = new express.Router();
 router.post('/', middlewares.verify_order_exists, controller.create_order);
 
 // get order(s)
-router.get('/', middlewares.verify_get_query, controller.get_order);
+// either companyName or the customerAddress or both are required
+router.get('/', middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order);
+
+
+// delete an order by orderId. orderId is required
+router.delete('/', middlewares.verify_query_params(['orderId']), controller.delete_order);
 
 module.exports = router;
