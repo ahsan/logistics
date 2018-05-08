@@ -61,6 +61,11 @@ const OrderSchema = new mongoose.Schema({
 OrderSchema.plugin(timestamps);
 
 // create index for the fields orderId, companyName, address, orderedItem
-OrderSchema.index({orderId: 1, companyName: 1, customerAddress: 1, orderedItem: 1});
+OrderSchema.index({
+  orderId: 1,
+  companyName: 1,
+  customerAddress: 1,
+  orderedItem: 1
+});
 
 module.exports = mongoose.model('Order', OrderSchema);

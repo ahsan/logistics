@@ -36,8 +36,11 @@ router.post('/', middlewares.verify_order_exists, controller.create_order);
 // either companyName or the customerAddress or both are required
 router.get('/', middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order);
 
-
 // delete an order by orderId. orderId is required
 router.delete('/', middlewares.verify_query_params(['orderId']), controller.delete_order);
+
+// get the sorted list of orders by the number of orders placed for each type of orderedItem
+router.get('/sorted', controller.sort_by_ordered_item);
+
 
 module.exports = router;

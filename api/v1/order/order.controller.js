@@ -117,8 +117,64 @@ exports.delete_order = function (req, res) {
     });
 };
 
+exports.sort_by_ordered_item = function(req, res) {
 
+    // Get a list of distinct orderedItems
+    Order.distinct('orderedItem', function(err, distinct_items) {
+        if(err) {
+            winston.error(`Encountered an error while getting the distinct types of orderedItem: ${JSON.stringify(err)}`);
+            return res.status(500).json({
+                message: err.message
+            });
+        } else if (distinct_items.length == 0) { // there were no orderedItems in the DB
+            return res.status(400).json({
+                message: `Could not find any type of ordered item. There aren't any orders placed yet.`
+            });
+        } else {
 
+            let count_promises = []; // this array will hold all the promises
+            let items_count_arr = []; // this array will hold the count results
 
+            // get the counts of each distinct oredered item, asynchronously
+            distinct_items.forEach(item => {
+                countPromise = Order.count({'orderedItem': item}).exec();
+                count_promises.push(countPromise);
+                countPromise.then(function(count){
+                    items_count_arr.push([item, count]);
+                }).catch(function(err){
+                    winston.error(`Encountered an error while counting the orders of orderedItem: ${item}.
+                    ${JSON.stringify(err)}`);
+                });
+            });
 
+            Promise.all(count_promises).then(function(){
+                // the items_count_arr is complete here, it just needs to be sorted
 
+                // sort the items_count_arr
+                items_count_arr.sort(function compare_items(item_a,item_b) {
+                    return item_b[1] - item_a[1]; // descending order
+                });
+
+                // make the result more presentable
+                let return_arr = items_count_arr.map(function(array_item) {
+                    return {
+                        'item_name': array_item[0],
+                        'times_ordered': array_item[1]
+                    }
+                });
+
+                // respond with the results
+                return res.status(200).json({
+                    message: `Successfully sorted the ordered items in descneding order.`,
+                    orders: return_arr
+                });
+
+            }).catch(function(err){
+                return res.status(500).json({
+                    message: `Encountered an error while getting counts of all the distinct orderedItems: ${JSON.stringify(err)}`
+                });
+                console.log(err)
+            });
+        }
+    });
+};
