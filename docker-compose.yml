@@ -1,0 +1,33 @@
+
+version: '3'
+services:
+  mongodb:
+    build: mongo
+    image: logistics/mongo:latest
+    container_name: logistics_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo:/data/db
+    restart: on-failure:3
+
+  api_server:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: logistics/api_server:1.0.0
+    container_name: logistics_api_server
+    ports:
+      - "3000:3000"
+    restart: always
+
+  unit_test:
+    build:
+      context: ./
+      dockerfile: tests/unit_tests.Dockerfile
+    image: logistics/unit_tests:1.0.0
+    container_name: logistic_unit_tests
+    depends_on:
+      - "mongodb"
+    ports:
+      - "3000:3000"

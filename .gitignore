@@ -61,3 +61,7 @@ typings/
 
 # VS Code
 .vscode/
+
+# Mongo volumes
+mongo/**/*.*
+!mongo/Dockerfile
