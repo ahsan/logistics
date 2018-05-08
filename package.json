@@ -4,7 +4,7 @@
   "description": "A sample NodeJS application to implement basic logistics operations.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./tests/"
+    "test": "NODE_ENV=TEST && mocha ./tests/"
   },
   "repository": {
     "type": "git",

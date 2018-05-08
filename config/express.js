@@ -31,12 +31,14 @@ const bodyParser = require('body-parser');
  */
 module.exports = function(app) {
 
+  // parse request body
+  app.use(bodyParser.urlencoded({
+    extended: true
+  }));
+  app.use(bodyParser.json());
+
   // bind routes to the express app
   require('./routes')(app);
-
-  // parse request body
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
 
   // CORS middleware
   app.use((req, res, next) => {

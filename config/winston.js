@@ -42,12 +42,13 @@ let log_level = process.env.LOG_LEVEL || 'error';
 
 const logger = new winston.Logger({
   transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({filename: logs}),
-  ],
-  level: log_level,
+    new winston.transports.Console({
+      level: log_level
+    }),
+    new winston.transports.File({
+      filename: logs,
+      level:'debug'
+    }),
+  ]
 });
-
-console.log('Winston logger created.');
-
 module.exports = logger;
