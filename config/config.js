@@ -45,7 +45,6 @@ module.exports = function (callback) {
           process.exit(1);
         }
         const db_url = process.env.NODE_ENV === 'TEST' ? process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_TEST : process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_PROD;
-
         // connect to the mongodb
         mongoose.connect(db_url).catch( function(err) {
           const error_str = 'Error while connecting to Mongodb: ' + JSON.stringify(err);

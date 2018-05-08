@@ -35,7 +35,7 @@ const winston = require('../../../config/winston');
 exports.create_order = function (req, res) {
     Order.create(
         req.body.order,
-        function (err, user) {
+        function (err, order) {
             if (err) {
               winston.error(
                 `Encountered an error while creating order.
@@ -50,7 +50,7 @@ exports.create_order = function (req, res) {
 
             return res.status(200).json({
                 message: "Order created successfully.",
-                user: user
+                order: order
             });
         });
 };
@@ -118,7 +118,6 @@ exports.delete_order = function (req, res) {
 };
 
 exports.sort_by_ordered_item = function(req, res) {
-
     // Get a list of distinct orderedItems
     Order.distinct('orderedItem', function(err, distinct_items) {
         if(err) {

@@ -32,7 +32,7 @@ const api_ver_prefix = '/v1'
 chai.use(chaiHttp);
 
 /**
- * Unit Tests for GET /ping endpoint
+ * Unit Tests for /ping endpoint
  */
 describe('Ping', function () {
     it('should get a json in response', function (done) {
@@ -42,7 +42,6 @@ describe('Ping', function () {
                 res.should.have.status(200);
                 res.body.message.should.be.a('string');
                 res.body.time.should.be.a('string');
-                // should.equal(res.body.error, null);
                 done();
             });
     });
