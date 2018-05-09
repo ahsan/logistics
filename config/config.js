@@ -28,7 +28,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const async = require('async');
 const winston = require('./winston');
-const wait_for_mongo = require('wait-for-mongo');
 
 /**
  *
@@ -46,33 +45,36 @@ module.exports = function (callback) {
           process.exit(1);
         }
         const db_url = process.env.NODE_ENV === 'TEST' ? process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_TEST : process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_PROD;
-        // connect to the mongodb
-        wait_for_mongo(db_url, {timeout: 2000}, function(err){
 
-          mongoose.connect(db_url).catch( function(err) {
-            if(err) {
-              winston.error(JSON.stringify(err));
-              environment_callback(err);
-            }
-            environment_callback();
-          });
+        /**
+         * connect to the mongodb
+        */
 
-          // on succesful connection
-          mongoose.connection.on('connected', function() {
-            winston.info('MongoDB connected on: ', db_url);
-            environment_callback();
-          });
-
-          // if the connection throws an error
-          mongoose.connection.on('error', function (err) {
-            winston.error('Encountered an error while connecting to MongoDB: ', JSON.stringify(err));
-          });
-
-          // on disconnection
-          mongoose.connection.on('disconnected', function() {
-            winston.error('Mongoose connection disconnected');
-          });
+        // on succesful connection
+        mongoose.connection.on('connected', function() {
+          winston.info('MongoDB connected on: ', db_url);
+          environment_callback();
         });
+
+        // if the connection throws an error
+        mongoose.connection.on('error', function (err) {
+          winston.error('Encountered an error while connecting to MongoDB: ', JSON.stringify(err));
+        });
+
+        // on disconnection
+        mongoose.connection.on('disconnected', function() {
+          winston.error('Mongoose connection disconnected');
+        });
+
+        mongoose.connect(db_url).catch( function(err) {
+          if(err) {
+            winston.error(JSON.stringify(err));
+            environment_callback(err);
+          }
+          // environment_callback();
+        });
+
+
       }
     ],
 

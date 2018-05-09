@@ -8,6 +8,9 @@ WORKDIR /opt/logistics/
 RUN npm install
 RUN npm install -g mocha
 
+RUN apk add --no-cache curl
+
+
 EXPOSE 3000
 
 CMD ["npm", "test"]
