@@ -45,6 +45,14 @@ The recommended way to bring up the application is through docker compose.
 ```
 docker-compose up --build mongodb api_server
 ```
+
+4. The application should now be accessible on the localhost:3000, you can check by making a get request to this address:
+```
+curl localhost:3000/v1/ping
+```
+
+
+
 ## Manually
 The application can also be hosted on bare-metal if you want. In order to run it manually, follow these steps:
 1. Ensure that a mongodb instance is up and running.
@@ -57,7 +65,11 @@ MONGO_PORT=<port of the database>
 ```
 node app.js
 ```
-
+4. The application should now be accessible on the address and port defined in the .env file (default is localhost:3000), you can check by making a get request to this address:
+```
+MONGO_IP=<IP of the database>
+MONGO_PORT=<port of the database>
+```
 
 # Running the Unit Tests
 
