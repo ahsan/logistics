@@ -23,50 +23,32 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const mongoose = require('mongoose');
-const timestamps = require('mongoose-timestamp');
+const express = require('express');
+const controller = require('./company.controller');
+const middlewares = require('./company.middlewares');
+const shared_middlewares = require('../shared.middlewares');
 
-/**
- * The Order schema.
- */
-const OrderSchema = new mongoose.Schema({
-  orderId: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  companyName: {
-    type: String,
-    required: true
-  },
-  customerAddress: {
-    type: String,
-    required: true
-  },
-  orderedItem: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  currency: {
-    type: String,
-    required: true
-  }
-});
+let router = new express.Router();
 
-// mongoose-timestamp adds createdAt and updatedAt times to the document
-OrderSchema.plugin(timestamps);
+// get company info
+router.get('/', shared_middlewares.verify_query_params(['name']), controller.get_company);
 
-// create index for the fields orderId, companyName, address, orderedItem
-OrderSchema.index({
-  orderId: 1,
-  companyName: 1,
-  customerAddress: 1,
-  orderedItem: 1
-});
+// get all orders of a company
+router.get('/orders', shared_middlewares.verify_query_params(['name']), controller.get_company_orders);
+
+// Get the amount of money paid by a company
+router.get('/money_paid', shared_middlewares.verify_query_params(['name']), controller.get_company_money_paid);
+
+// Get all companies that bought a certain orderItem
+router.get('/specific_item', shared_middlewares.verify_query_params(['orderedItem']), controller.get_companies_by_order);
+
+// update company info
+router.put('/', shared_middlewares.verify_query_params(['name']), middlewares.verify_company_exists, controller.update_company);
+
+// delete company
+router.delete('/', shared_middlewares.verify_query_params(['name']), controller.delete_company);
 
 
-module.exports = mongoose.model('Order', OrderSchema);
+
+
+module.exports = router;

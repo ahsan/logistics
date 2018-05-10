@@ -24,6 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 For more information, please refer to <http://unlicense.org/> **/
 
 const Order = require('./order.model');
+const Company = require('../company/company.model');
 const winston = require('../../../config/winston');
 
 /**
@@ -33,6 +34,7 @@ const winston = require('../../../config/winston');
  * @return response code, message and created order.
  */
 exports.create_order = function (req, res) {
+    winston.debug(`Inside create order`);
     Order.create(
         req.body.order,
         function (err, order) {
@@ -47,11 +49,52 @@ exports.create_order = function (req, res) {
                   order: null
               });
             }
-
-            return res.status(200).json({
-                message: "Order created successfully.",
-                order: order
-            });
+            winston.debug(`Order created`);
+            // on creation of an order, add it to the company's orders
+            Company.findOneAndUpdate(
+                {'name': order.companyName},
+                { $push: {orders: order._id}},
+                {new: true},
+                function(err, updated_company) {
+                    if(err) {
+                        winston.error(`Order created but encountered an error while updating the company: ${JSON.stringify(err)}`);
+                        return res.status(500).json({
+                            message: err.message,
+                            order: order
+                        });
+                    } else if (updated_company == null) {
+                        // the company does not exist yet, create it
+                        winston.debug(`Company does not exist`);
+                        Company.create({
+                                'name': order.companyName,
+                                'orders': [order._id]
+                            },
+                            function (err, created_company) {
+                                if (err) {
+                                  winston.error(
+                                    `Order created but encountered an error while creating company.
+                                     Request: ${JSON.stringify(req.body.order)},
+                                     Error: ${JSON.stringify(err)}`
+                                  );
+                                  return res.status(400).json({
+                                    message: `Order created but could not find/create a company with companyName`,
+                                    order: order
+                                });
+                                }
+                                return res.status(200).json({
+                                    message: "Order created successfully, new company added to the db.",
+                                    order: order
+                                });
+                            });
+                    } else {
+                        // everything went okay
+                        winston.debug(`Company does not exist`);
+                        return res.status(200).json({
+                            message: "Order created successfully.",
+                            order: order
+                        });
+                    }
+                });
         });
 };
 
@@ -94,6 +137,8 @@ exports.get_order = function (req, res) {
  * @return response code, message and queried order.
  */
 exports.delete_order = function (req, res) {
+    // ToDo: Make this more atomic
+    let retMessage = "";
     Order.findOneAndRemove(
         req.mongoose_query,
         function(err, deleted_order) {
@@ -109,12 +154,36 @@ exports.delete_order = function (req, res) {
                     order: null
                 });
             } else {
-                return res.status(200).json({
-                    message: `Deleted order successfully.`,
-                    order: deleted_order
+                winston.debug(`Order deleted`);
+                // on deletion of an order, also remove it from its corresponding company
+                Company.findOneAndUpdate(
+                    {'name': deleted_order.companyName},
+                    {$pull: {orders: deleted_order._id}},
+                    {new: true},
+                    function(err, updated_company) {
+                        if(err) {
+                            winston.error(`Deleted the order but encountered an error while updating its company: ${JSON.stringify(err)}`);
+                            return res.status(500).json({
+                                message: err.message,
+                                order: deleted_order
+                            });
+                        } else if (updated_company == null) {
+                            return res.status(500).json({
+                                message: `Deleted the order but could not find a company with this companyName.`,
+                                order: deleted_order
+                            });
+                        } else {
+                            winston.debug(`Order pulled from the company`);
+                            return res.status(200).json({
+                                message: `Deleted order successfully.`,
+                                order: deleted_order
+                            });
+                        }
                 });
             }
     });
+
+
 };
 
 exports.sort_by_ordered_item = function(req, res) {

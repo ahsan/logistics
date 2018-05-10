@@ -23,50 +23,15 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const mongoose = require('mongoose');
-const timestamps = require('mongoose-timestamp');
+const winston = require('../../../config/winston');
 
-/**
- * The Order schema.
- */
-const OrderSchema = new mongoose.Schema({
-  orderId: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  companyName: {
-    type: String,
-    required: true
-  },
-  customerAddress: {
-    type: String,
-    required: true
-  },
-  orderedItem: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  currency: {
-    type: String,
-    required: true
+// checks if the order to be created exists in the POST body
+module.exports.verify_company_exists = function(req, res, next) {
+  if(!req.body.company){
+    return res.status(400).json({
+      message: `Request's body does not have a company object.`
+    });
   }
-});
+  next();
+}
 
-// mongoose-timestamp adds createdAt and updatedAt times to the document
-OrderSchema.plugin(timestamps);
-
-// create index for the fields orderId, companyName, address, orderedItem
-OrderSchema.index({
-  orderId: 1,
-  companyName: 1,
-  customerAddress: 1,
-  orderedItem: 1
-});
-
-
-module.exports = mongoose.model('Order', OrderSchema);

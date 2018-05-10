@@ -23,50 +23,33 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-const mongoose = require('mongoose');
-const timestamps = require('mongoose-timestamp');
+// allows requests containing specific query strings defined in valid_queries
+module.exports.verify_query_params = function(valid_queries) {
+  return function(req, res, next) {
+    if(!req.query){
+      return res.status(400).json({
+        message: `The request does not have a valid query.`
+      });
+    }
 
-/**
- * The Order schema.
- */
-const OrderSchema = new mongoose.Schema({
-  orderId: {
-    type: Number,
-    required: true,
-    unique: true
-  },
-  companyName: {
-    type: String,
-    required: true
-  },
-  customerAddress: {
-    type: String,
-    required: true
-  },
-  orderedItem: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  currency: {
-    type: String,
-    required: true
+    // const valid_queries = ['companyName', 'customerAddress'];
+    let query_keys = Object.keys(req.query);
+    let mongoose_query = {};
+
+    query_keys.forEach(query_key => {
+      if(valid_queries.includes(query_key)) {
+        mongoose_query[query_key] = req.query[query_key];
+      }
+    });
+
+    // respond with error if the mongoose_query object is empty
+    if(JSON.stringify(mongoose_query) === JSON.stringify({})) {
+      return res.status(400).json({
+        message: `The request does not have a valid query. Valid queries are: ${valid_queries.join(', ')}.`
+      });
+    } else {
+      req.mongoose_query = mongoose_query;
+      next();
+    }
   }
-});
-
-// mongoose-timestamp adds createdAt and updatedAt times to the document
-OrderSchema.plugin(timestamps);
-
-// create index for the fields orderId, companyName, address, orderedItem
-OrderSchema.index({
-  orderId: 1,
-  companyName: 1,
-  customerAddress: 1,
-  orderedItem: 1
-});
-
-
-module.exports = mongoose.model('Order', OrderSchema);
+}

@@ -23,21 +23,23 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <http://unlicense.org/> **/
 
-var express = require('express');
-var controller = require('./order.controller');
-var middlewares = require('./order.middlewares');
+const express = require('express');
+const controller = require('./order.controller');
+const middlewares = require('./order.middlewares');
+const shared_middlewares = require('../shared.middlewares');
 
-var router = new express.Router();
+let router = new express.Router();
 
 // create a new order
 router.post('/', middlewares.verify_order_exists, controller.create_order);
 
-// get order(s)
-// either companyName or the customerAddress or both are required
-router.get('/', middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order);
+// get order(s) by customerAddress
+// router.get('/', shared_middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order); // This is the OLD Solution.
+// To get all orders by company, use the GET /company route now
+router.get('/', shared_middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order);
 
 // delete an order by orderId. orderId is required
-router.delete('/', middlewares.verify_query_params(['orderId']), controller.delete_order);
+router.delete('/', shared_middlewares.verify_query_params(['orderId']), controller.delete_order);
 
 // get the sorted list of orders by the number of orders placed for each type of orderedItem
 router.get('/sorted', controller.sort_by_ordered_item);

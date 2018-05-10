@@ -39,4 +39,7 @@ module.exports = function (app) {
   // order endpoint
   app.use('/v1/order', require('./order/order.routes'));
 
+  // company endpoint
+  app.use('/v1/company', require('./company/company.routes'));
+
 };

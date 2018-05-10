@@ -27,46 +27,26 @@ const mongoose = require('mongoose');
 const timestamps = require('mongoose-timestamp');
 
 /**
- * The Order schema.
+ * The Company schema.
  */
-const OrderSchema = new mongoose.Schema({
-  orderId: {
-    type: Number,
+const CompanySchema = new mongoose.Schema({
+  name: {
+    type: String,
     required: true,
     unique: true
   },
-  companyName: {
-    type: String,
-    required: true
-  },
-  customerAddress: {
-    type: String,
-    required: true
-  },
-  orderedItem: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  currency: {
-    type: String,
-    required: true
+  orders: {
+    type: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+    default: []
   }
 });
 
 // mongoose-timestamp adds createdAt and updatedAt times to the document
-OrderSchema.plugin(timestamps);
+CompanySchema.plugin(timestamps);
 
-// create index for the fields orderId, companyName, address, orderedItem
-OrderSchema.index({
-  orderId: 1,
-  companyName: 1,
-  customerAddress: 1,
-  orderedItem: 1
+// create index for the name field
+CompanySchema.index({
+  name: 1
 });
 
-
-module.exports = mongoose.model('Order', OrderSchema);
+module.exports = mongoose.model('Company', CompanySchema);

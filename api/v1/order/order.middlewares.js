@@ -34,35 +34,3 @@ module.exports.verify_order_exists = function(req, res, next) {
   }
   next();
 }
-
-// allows requests containing specific query strings defined in valid_queries
-module.exports.verify_query_params = function(valid_queries) {
-  return function(req, res, next) {
-    if(!req.query){
-      return res.status(400).json({
-        message: `The request does not have a valid query.`
-      });
-    }
-
-    // const valid_queries = ['companyName', 'customerAddress'];
-    let query_keys = Object.keys(req.query);
-    let mongoose_query = {};
-
-    query_keys.forEach(query_key => {
-      if(valid_queries.includes(query_key)) {
-        mongoose_query[query_key] = req.query[query_key];
-      }
-    });
-
-    // respond with error if the mongoose_query object is empty
-    if(JSON.stringify(mongoose_query) === JSON.stringify({})) {
-      return res.status(400).json({
-        message: `The request does not have a valid query. Valid queries are: ${valid_queries.join(', ')}.`
-      });
-    } else {
-      req.mongoose_query = mongoose_query;
-      next();
-    }
-  }
-}
-
