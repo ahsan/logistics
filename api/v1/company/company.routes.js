@@ -31,22 +31,22 @@ const shared_middlewares = require('../shared.middlewares');
 let router = new express.Router();
 
 // get company info
-router.get('/', shared_middlewares.verify_query_params(['name']), controller.get_company);
+router.get('/', shared_middlewares.verify_query_params(['address']), controller.get_company);
 
 // get all orders of a company
-router.get('/orders', shared_middlewares.verify_query_params(['name']), controller.get_company_orders);
+router.get('/orders', shared_middlewares.verify_query_params(['address']), controller.get_company_orders);
 
 // Get the amount of money paid by a company
-router.get('/money_paid', shared_middlewares.verify_query_params(['name']), controller.get_company_money_paid);
+router.get('/money_paid', shared_middlewares.verify_query_params(['address']), controller.get_company_money_paid);
 
 // Get all companies that bought a certain orderItem
 router.get('/specific_item', shared_middlewares.verify_query_params(['orderedItem']), controller.get_companies_by_order);
 
 // update company info
-router.put('/', shared_middlewares.verify_query_params(['name']), middlewares.verify_company_exists, controller.update_company);
+router.put('/', shared_middlewares.verify_query_params(['address']), middlewares.verify_company_exists, controller.update_company);
 
 // delete company
-router.delete('/', shared_middlewares.verify_query_params(['name']), controller.delete_company);
+router.delete('/', shared_middlewares.verify_query_params(['address']), controller.delete_company);
 
 
 

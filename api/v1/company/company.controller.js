@@ -39,19 +39,19 @@ exports.get_company = function (req, res) {
         {_id: 0, __v: 0, updatedAt:0, createdAt:0}, // user doesnt care about these fields
         function(err, found_company) {
             if(err) {
-                winston.error(`Encountered an error while querying a company: ${JSON.stringify(err)}`);
+                winston.error(`Encountered an error while querying a customer company: ${JSON.stringify(err)}`);
                 return res.status(500).json({
                     message: err.message,
                     company: null
                 });
             } else if (found_company == null) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer company with the given query parameters`,
                     company: null
                 });
             } else {
                 return res.status(200).json({
-                    message: `Found company successfully.`,
+                    message: `Found customer company successfully.`,
                     company: found_company
                 });
             }
@@ -72,18 +72,18 @@ exports.get_company_orders = function (req, res) {
         .then(function(found_company){
             if (found_company == null) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer company with the given query parameters`,
                     orders: null
                 });
             } else {
                 return res.status(200).json({
-                    message: `Found company successfully.`,
+                    message: `Found customer company successfully.`,
                     orders: found_company.orders
                 });
             }
         })
         .catch(function(err) {
-            winston.error(`Encountered an error while querying a company for orders: ${JSON.stringify(err)}`);
+            winston.error(`Encountered an error while querying a customer company for orders: ${JSON.stringify(err)}`);
             return res.status(500).json({
                 message: err.message,
                 orders: null
@@ -109,7 +109,7 @@ exports.get_company_money_paid = function (req, res) {
         .then(function(found_company){
             if (found_company == null) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer company with the given query parameters`,
                     money_paid: null
                 });
             } else {
@@ -125,13 +125,13 @@ exports.get_company_money_paid = function (req, res) {
                 });
 
                 return res.status(200).json({
-                    message: `Calculated the money paid by company successfully.`,
+                    message: `Calculated the money paid by customer company successfully.`,
                     money_paid: return_dict
                 });
             }
         })
         .catch(function(err) {
-            winston.error(`Encountered an error while querying a company for orders: ${JSON.stringify(err)}`);
+            winston.error(`Encountered an error while querying a customer company for orders: ${JSON.stringify(err)}`);
             return res.status(500).json({
                 message: err.message,
                 money_paid: null
@@ -151,14 +151,14 @@ exports.get_companies_by_order = function (req, res) {
         'companyName', // only return company names
         function(err, found_orders) {
             if(err) {
-                winston.error(`Encountered an error while querying for companies: ${JSON.stringify(err)}`);
+                winston.error(`Encountered an error while querying for customer  companies: ${JSON.stringify(err)}`);
                 return res.status(500).json({
                     message: err.message,
                     companies: null
                 });
             } else if (found_orders == null) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer company with the given query parameters`,
                     companies: null
                 });
             } else {
@@ -170,7 +170,7 @@ exports.get_companies_by_order = function (req, res) {
                 });
 
                 return res.status(200).json({
-                    message: `Found all the company(s) successfully that ordered the provided item.`,
+                    message: `Found all the customer company(s) successfully that ordered the provided item.`,
                     companies: Array.from(return_companies)
                 });
             }
@@ -199,19 +199,19 @@ exports.update_company = function (req, res) {
         {new: true},
         function(err, updated_company) {
             if(err) {
-                winston.error(`Encountered an error while updating a company: ${JSON.stringify(err)}`);
+                winston.error(`Encountered an error while updating a customer company: ${JSON.stringify(err)}`);
                 return res.status(500).json({
                     message: err.message,
                     company: null
                 });
             } else if (updated_company == null) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer company with the given query parameters`,
                     company: null
                 });
             } else {
                 return res.status(200).json({
-                    message: `Updated company successfully.`,
+                    message: `Updated customer company successfully.`,
                     company: updated_company
                 });
             }
@@ -230,19 +230,19 @@ exports.delete_company = function (req, res) {
         req.mongoose_query,
         function(err, deleted_company) {
             if(err) {
-                winston.error(`Encountered an error while deleting a company: ${JSON.stringify(err)}`);
+                winston.error(`Encountered an error while deleting a customer company: ${JSON.stringify(err)}`);
                 return res.status(500).json({
                     message: err.message,
                     company: null
                 });
             } else if (!deleted_company) {
                 return res.status(400).json({
-                    message: `Could not find a company with the given query parameters`,
+                    message: `Could not find a customer  company with the given query parameters`,
                     company: null
                 });
             } else {
                 return res.status(200).json({
-                    message: `Deleted company successfully.`,
+                    message: `Deleted customer company successfully.`,
                     order: deleted_company
                 });
             }

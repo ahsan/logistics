@@ -49,46 +49,44 @@ exports.create_order = function (req, res) {
               });
             }
             winston.debug(`Order created`);
-            // on creation of an order, add it to the company's orders
+            // on creation of an order, add it to the customer company's orders
             Company.findOneAndUpdate(
-                {'name': order.companyName},
+                {'address': order.customerAddress},
                 { $push: {orders: order._id}},
                 {new: true},
                 function(err, updated_company) {
                     if(err) {
-                        winston.error(`Order created but encountered an error while updating the company: ${JSON.stringify(err)}`);
+                        winston.error(`Order created but encountered an error while updating the customer company: ${JSON.stringify(err)}`);
                         return res.status(500).json({
                             message: err.message,
                             order: order
                         });
                     } else if (updated_company == null) {
                         // the company does not exist yet, create it
-                        winston.debug(`Company does not exist`);
+                        winston.debug(`Customer company does not exist`);
                         Company.create({
-                                'name': order.companyName,
                                 'address': order.customerAddress,
                                 'orders': [order._id]
                             },
                             function (err, created_company) {
                                 if (err) {
                                   winston.error(
-                                    `Order created but encountered an error while creating company.
+                                    `Order created but encountered an error while creating customer company.
                                      Request: ${JSON.stringify(req.body.order)},
                                      Error: ${JSON.stringify(err)}`
                                   );
                                   return res.status(400).json({
-                                    message: `Order created but could not find/create a company with companyName`,
+                                    message: `Order created but could not find/create a customer company`,
                                     order: order
                                 });
                                 }
                                 return res.status(200).json({
-                                    message: "Order created successfully, new company added to the db.",
+                                    message: "Order created successfully, new customer company added to the db.",
                                     order: order
                                 });
                             });
                     } else {
                         // everything went okay
-                        winston.debug(`Company does not exist`);
                         return res.status(200).json({
                             message: "Order created successfully.",
                             order: order
@@ -155,9 +153,9 @@ exports.delete_order = function (req, res) {
                 });
             } else {
                 winston.debug(`Order deleted`);
-                // on deletion of an order, also remove it from its corresponding company
+                // on deletion of an order, also remove it from its corresponding customer company
                 Company.findOneAndUpdate(
-                    {'name': deleted_order.companyName},
+                    {'address': deleted_order.customerAddress},
                     {$pull: {orders: deleted_order._id}},
                     {new: true},
                     function(err, updated_company) {
@@ -186,6 +184,12 @@ exports.delete_order = function (req, res) {
 
 };
 
+/**
+ * Gets a list of all the ordered items by descending order of popularity.
+ * @param req: the request object
+ * @param res: the response object
+ * @return response code, message and orders array.
+ */
 exports.sort_by_ordered_item = function(req, res) {
     // Get a list of distinct orderedItems
     Order.distinct('orderedItem', function(err, distinct_items) {

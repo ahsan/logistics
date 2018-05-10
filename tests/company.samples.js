@@ -29,14 +29,17 @@ For more information, please refer to <http://unlicense.org/> **/
 module.exports = [
     {
       name: "company 1",
+      address: "address1",
       orders: []
     },
     {
       name: "company 2",
+      address: "address2",
       orders: []
     },
     {
       name: "company 3",
+      address: "address3",
       orders: []
     }
 ];

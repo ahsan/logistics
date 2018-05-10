@@ -42,10 +42,11 @@ The recommended way to bring up the application is through docker compose.
 1. Install [Docker](https://docs.docker.com/install/).
 2. Install [docker-compose](https://docs.docker.com/compose/install/).
 3. In the project root folder, run the following command to bring up the app containers:
-`
+```
 docker-compose up --build mongodb api_server
-`
+```
 ## Manually
+The application can also be hosted on bare-metal if you want. In order to run it manually, follow these steps:
 1. Ensure that a mongodb instance is up and running.
 2. Populate the .env file with the ip address and port of MongoDB instance. Change the values of the following variables:
 ```

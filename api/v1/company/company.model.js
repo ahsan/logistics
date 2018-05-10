@@ -32,12 +32,13 @@ const timestamps = require('mongoose-timestamp');
 const CompanySchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    unique: true
+    required: false,
+    default: "<Name is Unset>"
   },
   address: {
     type: String,
-    required: false
+    required: true,
+    unique: true
   },
   orders: {
     type: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Order' }],

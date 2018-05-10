@@ -69,9 +69,9 @@ describe('Order', function () {
             });
         });
 
-        it('should get company info by company name', function (done) {
+        it('should get company info by company address', function (done) {
             chai.request(app)
-                .get(`${api_ver_prefix}/company?name=${sample_companies[0].name}`)
+                .get(`${api_ver_prefix}/company?address=${sample_companies[0].address}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.message.should.be.a('string');
@@ -82,9 +82,9 @@ describe('Order', function () {
         });
 
 
-        it('should not get company info for non existent company name', function (done) {
+        it('should not get company info for non existent company address', function (done) {
             chai.request(app)
-                .get(`${api_ver_prefix}/company?name=non_exitent_name`)
+                .get(`${api_ver_prefix}/company?address=non_exitent_address`)
                 .end(function (err, res) {
                     res.should.have.status(400);
                     res.body.message.should.be.a('string');
@@ -95,7 +95,7 @@ describe('Order', function () {
 
         it('should get all orders of a company', function (done) {
             chai.request(app)
-                .get(`${api_ver_prefix}/company/orders?name=${sample_companies[0].name}`)
+                .get(`${api_ver_prefix}/company/orders?address=${sample_companies[0].address}`)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.message.should.be.a('string');
