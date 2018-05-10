@@ -67,8 +67,7 @@ node app.js
 ```
 4. The application should now be accessible on the address and port defined in the .env file (default is localhost:3000), you can check by making a get request to this address:
 ```
-MONGO_IP=<IP of the database>
-MONGO_PORT=<port of the database>
+curl localhost:3000/v1/ping
 ```
 
 # Running the Unit Tests
