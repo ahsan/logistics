@@ -40,11 +40,12 @@ module.exports = function (callback) {
       function(environment_callback) {
 
         // Define mongodb address based on the application environment variables
-        if (!process.env.MONGO_DB_ADDRESS || process.env.MONGO_DB_ADDRESS === '') {
+        if ((!process.env.MONGO_IP || process.env.MONGO_IP === '') && (!process.env.MONGO_PORT || process.env.MONGO_PORT === '')) {
           winston.error('MongoDB address was not found. Exiting the application.');
           process.exit(1);
         }
-        const db_url = process.env.NODE_ENV === 'TEST' ? process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_TEST : process.env.MONGO_DB_ADDRESS + process.env.MONGO_DB_PROD;
+        const mongo_address = `mongodb://${process.env.MONGO_IP}:${process.env.MONGO_PORT}/`;
+        const db_url = process.env.NODE_ENV === 'TEST' ? mongo_address + process.env.MONGO_DB_TEST : mongo_address + process.env.MONGO_DB_PROD;
 
         /**
          * connect to the mongodb

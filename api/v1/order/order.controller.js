@@ -34,7 +34,6 @@ const winston = require('../../../config/winston');
  * @return response code, message and created order.
  */
 exports.create_order = function (req, res) {
-    winston.debug(`Inside create order`);
     Order.create(
         req.body.order,
         function (err, order) {

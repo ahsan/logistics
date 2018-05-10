@@ -25,7 +25,7 @@
 # For more information, please refer to <http://unlicense.org/>
 
 source .env
-echo "Waiting for mongodb at ${MONGO_DB_ADDRESS}"
+echo "Waiting for mongodb at ${MONGO_IP}:${MONGO_PORT}"
 
 ret=1
 while true

@@ -34,13 +34,6 @@ const winston = require('../config/winston');
 
 chai.use(chaiHttp);
 
-// Wait for the server to get up
-before(function (done) {
-    app.on("appStarted", function () {
-        done();
-    });
-});
-
 /**
  * Unit Tests for /order endpoint
  */
