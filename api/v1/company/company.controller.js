@@ -73,12 +73,12 @@ exports.get_company_orders = function (req, res) {
             if (found_company == null) {
                 return res.status(400).json({
                     message: `Could not find a company with the given query parameters`,
-                    company: null
+                    orders: null
                 });
             } else {
                 return res.status(200).json({
                     message: `Found company successfully.`,
-                    company: found_company
+                    orders: found_company.orders
                 });
             }
         })
@@ -86,7 +86,7 @@ exports.get_company_orders = function (req, res) {
             winston.error(`Encountered an error while querying a company for orders: ${JSON.stringify(err)}`);
             return res.status(500).json({
                 message: err.message,
-                company: null
+                orders: null
             });
         });
 };

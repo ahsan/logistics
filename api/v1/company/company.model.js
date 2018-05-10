@@ -35,6 +35,10 @@ const CompanySchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  address: {
+    type: String,
+    required: false
+  },
   orders: {
     type: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     default: []

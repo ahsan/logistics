@@ -33,9 +33,7 @@ let router = new express.Router();
 // create a new order
 router.post('/', middlewares.verify_order_exists, controller.create_order);
 
-// get order(s) by customerAddress
-// router.get('/', shared_middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order); // This is the OLD Solution.
-// To get all orders by company, use the GET /company route now
+// get order(s)
 router.get('/', shared_middlewares.verify_query_params(['companyName', 'customerAddress']), controller.get_order);
 
 // delete an order by orderId. orderId is required

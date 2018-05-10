@@ -99,7 +99,7 @@ describe('Order', function () {
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.message.should.be.a('string');
-                    should.equal(res.body.company.orders.length, 0);
+                    should.equal(res.body.orders.length, 0);
                     done();
                 });
         });

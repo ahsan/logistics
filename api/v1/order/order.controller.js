@@ -66,6 +66,7 @@ exports.create_order = function (req, res) {
                         winston.debug(`Company does not exist`);
                         Company.create({
                                 'name': order.companyName,
+                                'address': order.customerAddress,
                                 'orders': [order._id]
                             },
                             function (err, created_company) {
