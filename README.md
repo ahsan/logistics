@@ -61,11 +61,15 @@ The application can also be hosted on bare-metal if you want. In order to run it
 MONGO_IP=<IP of the database>
 MONGO_PORT=<port of the database>
 ```
-3. Bootstrap the application by running `app.js`.
+3. Install dependencies
+```
+npm install
+```
+4. Bootstrap the application by running `app.js`.
 ```
 node app.js
 ```
-4. The application should now be accessible on the address and port defined in the .env file (default is localhost:3000), you can check by making a get request to this address:
+5. The application should now be accessible on the address and port defined in the .env file (default is localhost:3000), you can check by making a get request to this address:
 ```
 curl localhost:3000/v1/ping
 ```
